@@ -1,14 +1,16 @@
-`React` 란 ? 
+[TOC]
+
+
+
+## `React` 란 ? 
 
 자바스크립트 라이브러리 하나인 웹 프레임워크로 UI를 만들기 위해 사용됨
 
 
 
+React JS를 설치하기 위해서는 두 개의 Javascript 코드(readct, react-dom) import    
 
-
-React JS를 설치하기 위해서는 두 개의 Javascript 코드(readct, react-dom) import
-
-React에서 html을 작성하지 않고 생성하려면 react-dom 사용해야함
+React에서 html을 작성하지 않고 생성하려면 react-dom 사용해야함   
 
 react-dom은 모든 React element들을 HTML body에 둘 수 있도록 해줌
 
@@ -63,11 +65,11 @@ const btn = React.createElement("button",
 
 createElement 대체 방법 -> JSX 
 
-JSX 란, javascript를 확장한 문법으로 객체를 표현
-\- HTML 이랑 문법 구조가 비슷
-\- 리액트는 JSX문법을 사용, 그러나 브라우저는 JSX문법을 이해하지 못함
-\- Babel을 사용하면 브라우저가 이해할 수 있도록 JSX 문법을 변환해줌
-\- 스크립트 태그를 추가하고 리액트를 작성하고 있는 스크립트 태그에 type="text/babel"을 넣어줌
+JSX 란, javascript를 확장한 문법으로 객체를 표현    
+\- HTML 이랑 문법 구조가 비슷    
+\- 리액트는 JSX문법을 사용, 그러나 브라우저는 JSX문법을 이해하지 못함   
+\- Babel을 사용하면 브라우저가 이해할 수 있도록 JSX 문법을 변환해줌   
+\- 스크립트 태그를 추가하고 리액트를 작성하고 있는 스크립트 태그에 type="text/babel"을 넣어줌   
 
 
 
@@ -139,4 +141,198 @@ const Button = (
 - function으로 만들어 JSX return 하는 방식과 `= () => (` 는 같은 결과
 
 
+
+## state란 !
+
+기본적으로 데이터가 저장되는 곳, 동적인 값
+
+
+
+### React.useState()
+
+```js
+const data = React.useState();
+console.log(data);
+```
+
+log 출력 : (2) [undefined, f]    
+undefined = data   
+f = data 변경할 때 호출할 func                
+
+
+
+**`const[상태 값 저장 변수, 상태 값 갱신 함수] = useState(상태 초기 값);`**
+
+```js
+function App(){
+      let [counter, modifier] = React.useState(0);
+
+      return(
+        <div>
+          <h3>
+            Total clicks: {counter}
+          </h3>
+          <button>
+            Click me
+          </button>
+        </div>
+      );
+}
+```
+
+
+
+### modifier는 왜 쓰나 ?
+
+`let [counter, modifier] = React.useState(0);` 의 **modifier**(원하는 함수명으로 변경)은 state의 data 값 변경할 때 사용됨
+
+-> 리렌더링
+
+```js
+function App(){
+      let [counter, setCounter] = React.useState(0);
+      const onClick = () => {
+        // setCounter(counter + 1);
+        setCounter((current) => current + 1);
+      }
+      return(
+        <div>
+          <h3>
+            Total clicks: {counter}
+          </h3>
+          <button onClick={onClick}>
+            Click me
+          </button>
+        </div>
+      );
+}
+```
+
+> setCounter((current) => current + 1) 는 값이 변경될 때마다 새로운 state로 current가 생성되기 때문에 더 안전함
+
+
+
+--------------
+
+
+
+## unit conversion (단위 변환) 앱 만들기
+
+만들기 전에!     
+
+JSX는 class / for 와 같은 JavaScript에서 선점된 문법 용어 사용할 수 없다.      
+
+따라서 class는 `className` 으로, for은 `htmlFor` 로 바꿔서 작성한다.     
+
+
+
+### Minutes -> Hours 변환
+
+```js
+<!DOCTYPE html>
+<html>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    function App() {
+      const [minutes, setMinutes] = React.useState("");
+
+      const onChange = (event) => {
+        setMinutes(event.target.value);
+      };
+
+      const reset = () => setMinutes(0);
+
+      return (
+        <div>
+          <h1 className="hi">Super Converter</h1>
+          <div>
+            <label htmlFor="minutes">Minutes</label>
+            <input
+              value={minutes}
+              id="minutes"
+              placeholder="Minutes"
+              type="number"
+              onChange={onChange}
+            />
+          </div>
+          <div>
+            <label htmlFor="hours">Hours</label>
+            <input
+              value={Math.round(minutes / 60)}
+              id="hours"
+              placeholder="hours"
+              type="number"
+            />
+          </div>
+          <button onClick={reset}>reset</button>
+        </div>
+      );
+    }
+
+    const root = document.getElementById("root");
+    ReactDOM.render(<App />, root);
+  </script>
+</html>
+
+```
+
+
+
+### Hours -> Minutes 하는 flip function 만들기
+
+```js
+function App() {
+      const [amount, setAmount] = React.useState(0);
+      const [flipped, setFlipped] = React.useState(false);
+
+      const onChange = (event) => {
+        setAmount(event.target.value);
+      };
+
+      const reset = () => setAmount(0);
+      const onFlip = () => {
+        reset();
+        setFlipped((current) => !current);
+      };
+      
+      return (
+        <div>
+          <h1 className="hi">Super Converter</h1>
+          <div>
+            <label htmlFor="minutes">Minutes</label>
+            <input
+              value={flipped ? amount * 60 : amount}
+              id="minutes"
+              placeholder="Minutes"
+              type="number"
+              onChange={onChange}
+              disabled={flipped}
+            />
+          </div>
+          <div>
+            <label htmlFor="hours">Hours</label>
+            <input
+              value={flipped ? amount : Math.round(amount / 60)}
+              id="hours"
+              placeholder="hours"
+              type="number"
+              onChange={onChange}
+              disabled={!flipped}
+            />
+          </div>
+          <button onClick={reset}>reset</button>
+          <button onClick={onFlip}>Flip</button>
+        </div>
+      );
+    }
+
+    const root = document.getElementById("root");
+    ReactDOM.render(<App />, root);
+  </script>
+```
 
