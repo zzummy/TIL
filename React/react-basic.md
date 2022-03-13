@@ -1,8 +1,27 @@
-[TOC]
+> NomadCoders - ReactJS로 영화 웹 서비스 만들기 
 
 
 
-## `React` 란 ? 
+## 목차
+
+[1. React란 ?](#react란?)
+
+[2. state란 ?](#state)
+	[React.useState()](#react.usestate())
+	[modifier는 왜 쓰나?](#modifier는-왜-쓰나-?)
+
+[3. unit conversion (단위 변환) 앱 만들기](#unit-conversion-(단위-변환)-앱-만들기)
+	[Minutes to Hours 변환](#minutes-to-hours-변환)
+	[Hours to Minutes 하는 flip function 만들기](#hours-to-minutes-하는-flip-function-만들기)
+	[select를 사용한 단위 변환기](#select를-사용한-단위-변환기)
+
+[4. props란 ?](#props)
+
+
+
+
+
+## React란?
 
 자바스크립트 라이브러리 하나인 웹 프레임워크로 UI를 만들기 위해 사용됨
 
@@ -142,7 +161,7 @@ const Button = (
 
 
 
-## state란 !
+## state
 
 기본적으로 데이터가 저장되는 곳, 동적인 값
 
@@ -226,7 +245,7 @@ JSX는 class / for 와 같은 JavaScript에서 선점된 문법 용어 사용할
 
 
 
-### Minutes -> Hours 변환
+### Minutes to Hours 변환
 
 ```js
 <!DOCTYPE html>
@@ -283,7 +302,7 @@ JSX는 class / for 와 같은 JavaScript에서 선점된 문법 용어 사용할
 
 
 
-### Hours -> Minutes 하는 flip function 만들기
+### Hours to Minutes 하는 flip function 만들기
 
 ```js
 function App() {
@@ -338,7 +357,7 @@ function App() {
 
 
 
-### select을 사용한 단위 변환기 
+### select를 사용한 단위 변환기 
 
 ```js
 function App() {
@@ -367,3 +386,12 @@ function App() {
   1. props 바뀔 때
   2. state 바뀔 때
   3. 부모 컴포넌트가 리렌더링 될 때
+
+
+
+-----
+
+
+
+## props
+
