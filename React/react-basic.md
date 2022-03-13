@@ -336,3 +336,34 @@ function App() {
   </script>
 ```
 
+
+
+### select을 사용한 단위 변환기 
+
+```js
+function App() {
+      const [index, setIndex] = React.useState("xx");
+      const onSelect = (event) => {
+        setIndex(event.target.value);
+      };
+      return (
+        <div>
+          <h1 className="hi">Super Converter</h1>
+          <select value={index} onChange={onSelect}>
+            <option value="xx">Select your units</option>
+            <option value="0">Minutes & Hours</option>
+            <option value="1">Km & Miles</option>
+          </select>
+          <hr />
+          {index === "xx" ? "Please select your units" : null}
+          {index === "0" ? <MinutesToHours /> : null}
+          {index === "1" ? <KmToMiles /> : null}
+        </div>
+      );
+    }
+```
+
+- 리렌더링 조건
+  1. props 바뀔 때
+  2. state 바뀔 때
+  3. 부모 컴포넌트가 리렌더링 될 때
