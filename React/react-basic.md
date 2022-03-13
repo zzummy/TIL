@@ -6,16 +6,17 @@
 
 [1. React란 ?](#react란?)
 
-[2. state란 ?](#state)
-	[React.useState()](#react.usestate())
-	[modifier는 왜 쓰나?](#modifier는-왜-쓰나-?)
+[2. state란 ?](#state)   
+	[React.useState()](#react.usestate())   
+	[modifier는 왜 쓰나?](#modifier는-왜-쓰나-?)       
 
-[3. unit conversion (단위 변환) 앱 만들기](#unit-conversion-(단위-변환)-앱-만들기)
-	[Minutes to Hours 변환](#minutes-to-hours-변환)
-	[Hours to Minutes 하는 flip function 만들기](#hours-to-minutes-하는-flip-function-만들기)
-	[select를 사용한 단위 변환기](#select를-사용한-단위-변환기)
+[3. unit conversion (단위 변환) 앱 만들기](#unit-conversion-(단위-변환)-앱-만들기)   
+	[Minutes to Hours 변환](#minutes-to-hours-변환)    
+	[Hours to Minutes 하는 flip function 만들기 ](#hours-to-minutes-하는-flip-function-만들기)   
+	[select를 사용한 단위 변환기](#select를-사용한-단위-변환기)    
 
-[4. props란 ?](#props)
+[4. props란 ?](#props)    
+	[React.memo()](#react.memo())
 
 
 
@@ -389,9 +390,182 @@ function App() {
 
 
 
+
+
 -----
 
 
 
+
+
 ## props
+
+properties로, 부모 컴포넌트로부터 자식 컴포넌트로 data를 전송할 때 사용함    
+
+props는 객체 형태로 전달
+
+```js
+function Btn(props) {
+      console.log(props);
+      return (
+        <button
+          style={{
+            backgroundColor: "tomato",
+            color: "white",
+            padding: "10px 20px",
+            border: 0,
+            borderRadius: 10,
+          }}
+        >
+          {props.text}
+        </button>
+      );
+    }
+
+    function App() {
+      return (
+        <div>
+          <Btn text="Save Changes" />
+          <Btn text="Continue" />
+        </div>
+      );
+    }
+```
+
+Btn 컴포넌트에서 props.text로 접근할 수 있음
+
+
+
+실제로 props.property로 사용하지 않고 {property}처럼 사용할 수 있음
+
+```js
+function Btn({ text, big }) {
+      return (
+        <button
+          style={{
+            backgroundColor: "tomato",
+            color: "white",
+            padding: "10px 20px",
+            border: 0,
+            borderRadius: 10,
+            fontSize: big ? 18 : 16,
+          }}
+        >
+          {text}
+        </button>
+      );
+    }
+
+    function App() {
+      return (
+        <div>
+          <Btn text="Save Changes" big="false" />
+          <Btn text="Continue" />
+        </div>
+      );
+    }
+```
+
+
+
+`<Btn text={value} onClick={changeValue} />` 에서 onClick은 button 태그를 위한 이벤트리스너가 아님 ! 
+
+props의 property일 뿐, button에서 메소드로 달아줘야함 
+
+```js
+function Btn({ text, changeValue }) {
+      return (
+        <div>
+          <button
+            onClick={changeValue}
+            style={{
+              backgroundColor: "tomato",
+              color: "white",
+              padding: "10px 20px",
+              border: 0,
+              borderRadius: 10,
+            }}
+          >
+            {text}
+          </button>
+        </div>
+      );
+    }
+
+    function App() {
+      const [value, setValue] = React.useState("Save Changes");
+      const changeValue = () => setValue("Revert Changes");
+      return (
+        <div>
+          <Btn text={value} changeValue={changeValue} />
+          <Btn text="Continue" />
+        </div>
+      );
+    }
+
+```
+
+
+
+
+
+### React.memo()
+
+> component의 props가 변경되지 않았을 때, 리렌더링을 방지하기 위해 사용되는 함수
+
+
+
+```js
+const MemorizedBtn = React.memo(Btn);
+
+    function App() {
+      const [value, setValue] = React.useState("Save Changes");
+      const changeValue = () => setValue("Revert Changes");
+      return (
+        <div>
+          <MemorizedBtn text={value} changeValue={changeValue} />
+          <MemorizedBtn text="Continue" />
+        </div>
+      );
+    }
+```
+
+Save Changes 버튼 클릭했을 때, Continue의 state는 변경되지 않았으므로 memo를 써주면 됨
+
+
+
+`<script src="https://unpkg.com/prop-types@15.7.2/prop-types.js"></script>`을 통해 PropTypes - props의 type을 알 수 있음
+
+
+
+```js
+Btn.propTypes = {
+      text: PropTypes.string.isRequired,
+      fontSize: PropTypes.number,
+    };
+
+    function App() {
+      return (
+        <div>
+          <Btn text="Save Changes" fontSize={18} />
+          <Btn text="14" fontSize={"Continue"} />
+        </div>
+      );
+    }
+
+```
+
+를 사용하면 fontSize에 잘못된 type이 전송된 것을 console에서 확인할 수 있음
+
+`PropTypes.string.isRequired` : isRequired는 필수 props임을 알려줌 
+
+
+
+
+
+----
+
+
+
+
 
