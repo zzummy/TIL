@@ -60,8 +60,8 @@ const [toDo, setToDo] = useState("");
 
 ​           
 
-![image-20220317001403150](C:\Users\user\AppData\Roaming\Typora\typora-user-images\image-20220317001403150.png)
-
+> **Warning: Each child in a list should have a unique "key" prop.**
+>
 > 같은 component의 list를 render할 때 key라는 prop을 넣어줘야 한다는 경고 발생
 
 ​           
