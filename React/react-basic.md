@@ -7,26 +7,30 @@
 [1. React란 ?](#react란?)
 
 [2. state란 ?](#state)   
-   [React.useState()](#react.usestate)   
-   [modifier는 왜 쓰나?](#modifier는-왜-쓰나-?)       
+             [React.useState()](#react.usestate)   
+             [modifier는 왜 쓰나?](#modifier는-왜-쓰나-?)       
 
 [3. unit conversion (단위 변환) 앱 만들기](#unit-conversion-단위-변환-앱-만들기)   
-   [Minutes to Hours 변환](#minutes-to-hours-변환)    
-   [Hours to Minutes 하는 flip function 만들기 ](#hours-to-minutes-하는-flip-function-만들기)   
-   [select를 사용한 단위 변환기](#select를-사용한-단위-변환기)    
+             [Minutes to Hours 변환](#minutes-to-hours-변환)    
+             [Hours to Minutes 하는 flip function 만들기 ](#hours-to-minutes-하는-flip-function-만들기)   
+             [select를 사용한 단위 변환기](#select를-사용한-단위-변환기)    
 
 [4. props란 ?](#props)    
-   [React.memo()](#react.memo)
+             [React.memo()](#react.memo)
+
+[5. Effects](#effects)            
+             [useEffect() ](#useeffect)          
+             [Cleanup](#cleanup)
 
 
 
-
+​          
 
 ## React란?
 
 자바스크립트 라이브러리 하나인 웹 프레임워크로 UI를 만들기 위해 사용됨
 
-
+​          
 
 React JS를 설치하기 위해서는 두 개의 Javascript 코드(readct, react-dom) import    
 
@@ -34,7 +38,7 @@ React에서 html을 작성하지 않고 생성하려면 react-dom 사용해야�
 
 react-dom은 모든 React element들을 HTML body에 둘 수 있도록 해줌
 
-
+​          
 
 ```html
 <!DOCTYPE html>
@@ -54,15 +58,15 @@ react-dom은 모든 React element들을 HTML body에 둘 수 있도록 해줌
 
 ReactDOM.render(span, root) 
 
-​	React element를 가지고 HTML로 만들어 배치함 -> 사용자에게 보여줌
+React element를 가지고 HTML로 만들어 배치함 -> 사용자에게 보여줌
 
-​	2가지 render하려면
+2가지 render하려면
 
-​	`const container = React.createElement("div", null, [span,btn]) `
+`const container = React.createElement("div", null, [span,btn]) `
 
-   `ReactDOM.render(container, root);`
+`ReactDOM.render(container, root);`
 
-
+​          
 
 ```js
 const h3 = React.createElement("h3", 
@@ -77,21 +81,24 @@ const btn = React.createElement("button",
 		}, "Click me");
 ```
 
-
+​          
 
 ------
 
+​          
 
+createElement 대체 방법 -> **JSX** 
 
-createElement 대체 방법 -> JSX 
+​          
 
-JSX 란, javascript를 확장한 문법으로 객체를 표현    
-\- HTML 이랑 문법 구조가 비슷    
-\- 리액트는 JSX문법을 사용, 그러나 브라우저는 JSX문법을 이해하지 못함   
-\- Babel을 사용하면 브라우저가 이해할 수 있도록 JSX 문법을 변환해줌   
-\- 스크립트 태그를 추가하고 리액트를 작성하고 있는 스크립트 태그에 type="text/babel"을 넣어줌   
+**JSX** 란, javascript를 확장한 문법으로 객체를 표현    
 
+- HTML 이랑 문법 구조가 비슷    
+- 리액트는 JSX문법을 사용, 그러나 브라우저는 JSX문법을 이해하지 못함   
+- Babel을 사용하면 브라우저가 이해할 수 있도록 JSX 문법을 변환해줌   
+- 스크립트 태그를 추가하고 리액트를 작성하고 있는 스크립트 태그에 type="text/babel"을 넣어줌   
 
+​          
 
 - JSX 사용
 
@@ -114,7 +121,7 @@ const Button = (
    );
 ```
 
-
+​          
 
 - Babel 
 
@@ -125,7 +132,7 @@ const Button = (
   <script type="text/babel">
 ```
 
-
+​          
 
 - JSX를 사용한 createElement()
 
@@ -160,15 +167,19 @@ const Button = (
 
 - function으로 만들어 JSX return 하는 방식과 `= () => (` 는 같은 결과
 
-
+​          
 
 ## state
 
 기본적으로 데이터가 저장되는 곳, 동적인 값
 
-
+​          
 
 ### React.useState()
+
+> 변수, 변수를 제어하는 함수로 구성되며 변하는 값을 제어, 해당 부분의 리렌더링을 위함
+
+​         
 
 ```js
 const data = React.useState();
@@ -179,7 +190,7 @@ log 출력 : (2) [undefined, f]
 undefined = data   
 f = data 변경할 때 호출할 func                
 
-
+​          
 
 **`const[상태 값 저장 변수, 상태 값 갱신 함수] = useState(상태 초기 값);`**
 
@@ -200,7 +211,7 @@ function App(){
 }
 ```
 
-
+​          
 
 ### modifier는 왜 쓰나 ?
 
@@ -230,11 +241,11 @@ function App(){
 
 > setCounter((current) => current + 1) 는 값이 변경될 때마다 새로운 state로 current가 생성되기 때문에 더 안전함
 
-
+​          
 
 --------------
 
-
+​          
 
 ## unit conversion (단위 변환) 앱 만들기
 
@@ -244,7 +255,7 @@ JSX는 class / for 와 같은 JavaScript에서 선점된 문법 용어 사용할
 
 따라서 class는 `className` 으로, for은 `htmlFor` 로 바꿔서 작성한다.     
 
-
+​          
 
 ### Minutes to Hours 변환
 
@@ -301,7 +312,7 @@ JSX는 class / for 와 같은 JavaScript에서 선점된 문법 용어 사용할
 
 ```
 
-
+​          
 
 ### Hours to Minutes 하는 flip function 만들기
 
@@ -356,7 +367,7 @@ function App() {
   </script>
 ```
 
-
+​          
 
 ### select를 사용한 단위 변환기 
 
@@ -388,21 +399,25 @@ function App() {
   2. state 바뀔 때
   3. 부모 컴포넌트가 리렌더링 될 때
 
+​          
 
-
-
+​          
 
 -----
 
+​          
 
-
-
+​          
 
 ## props
 
-properties로, 부모 컴포넌트로부터 자식 컴포넌트로 data를 전송할 때 사용함    
+> properties로, 부모 컴포넌트로부터 자식 컴포넌트로 data를 전송할 때 사용함    
+>
+> 태그의 속성 값을 함수의 argument처럼 컴포넌트에 값을 전달해줌
+>
+> props는 객체 형태로 전달
 
-props는 객체 형태로 전달
+​            
 
 ```js
 function Btn(props) {
@@ -434,7 +449,7 @@ function Btn(props) {
 
 Btn 컴포넌트에서 props.text로 접근할 수 있음
 
-
+​          
 
 실제로 props.property로 사용하지 않고 {property}처럼 사용할 수 있음
 
@@ -466,7 +481,7 @@ function Btn({ text, big }) {
     }
 ```
 
-
+​          
 
 `<Btn text={value} onClick={changeValue} />` 에서 onClick은 button 태그를 위한 이벤트리스너가 아님 ! 
 
@@ -505,12 +520,14 @@ function Btn({ text, changeValue }) {
 
 ```
 
+​          
 
-
-
+​          
 
 ### React.memo()
 
+> 부모 컴포넌트에서 리렌더링되면, 모든 자식 컴포넌트들도 리렌더링 되는 경우를 막기 위해 사용됨
+>
 > component의 props가 변경되지 않았을 때, 리렌더링을 방지하기 위해 사용되는 함수
 
 
@@ -532,11 +549,11 @@ const MemorizedBtn = React.memo(Btn);
 
 Save Changes 버튼 클릭했을 때, Continue의 state는 변경되지 않았으므로 memo를 써주면 됨
 
-
+​          
 
 `<script src="https://unpkg.com/prop-types@15.7.2/prop-types.js"></script>`을 통해 PropTypes - props의 type을 알 수 있음
 
-
+​          
 
 ```js
 Btn.propTypes = {
@@ -565,7 +582,127 @@ Btn.propTypes = {
 
 ----
 
+​          
 
+## EFFECTS
+
+리렌더링 될 때마다 한 번만 받아도 될 정보 또한 계속 불려지는 문제가 발생함
+
+코드의 규모가 클 경우 리렌더링이 계속되는 경우는 비효율적이기 때문에 이에 대한 방법을 알아보자. 
+
+​          
+
+*첫번째 render에만 코드가 실행 -> 다른 state 변화에는 실행되지 않도록*
+
+예를들어 API통해 데이터 가져올 때, state가 변화할 때마다 render되지 않도록 코드 작성
+
+​          
+
+그래서 사용하는 ***useEffect*** 
+
+​          
+
+### useEffect
+
+`useEffect(effect: EffectCallback, deps?: DependencyList)`
+
+> 두 개의 argument를 가지는 function으로 코드의 실행 시점을 관리할 수 있는 선택권을 얻는 일종의 방어막
+>
+> 첫번째 argument : 우리가 딱 한번만 실행하고 싶은 코드
+>
+> 두번째 argument : [] 빈 값일 경우, 최초 1회 실행 / 있을 경우, 해당 값이 변할 때 실행됨 (여러개 입력 가능)
+
+
+
+- useEffect 예시(1)
+
+```js
+function App() {
+  const [counter, setValue] = useState(0);
+  const onClick = () => setValue((prev) => prev + 1);
+
+  console.log("i run all the time");
+
+  useEffect(() => {
+    console.log("CALL THE API...");
+  }, [])
+
+  return (
+    <div>
+      <h1>{counter}</h1>
+      <button onClick={onClick}>click me</button>
+    </div>
+  );
+}
+```
+
+useEffect에 들어간 함수는 state가 변경되도 실행되지 않는 것을 확인할 수 있음 ! 싱기
+
+=> 우리 코드가 딱 한 번 실행될 수 있도록 보호해줌 
+
+
+
+- useEffect 예시 (2)    
+  *search keyword에 변화가 있을 때만* API 호출하고 싶을 때 (다른 버튼 클릭시 search API 호출X)
+
+```js
+const [keyword, setKeyword] = useState("");
+  const onClick = () => setValue((prev) => prev + 1);
+  const onChange = (event) => setKeyword(event.target.value);
+  
+useEffect(() => {
+    if (keyword !== "" && keyword.length > 5) {
+      console.log("SEARCH FOR", keyword);
+    }
+  }, [keyword]);
+```
+
+똑같이 useEffect()를 사용하면 딱 한 번만 SEARCH FOR 로그가 출력됨
+
+=> 두번째 argument에 keyword를 적으면, `keyword`가 변할 때 코드 실행됨       
+(react에게 keyword만 지켜봐 ! 라는 것)
+
+=> 조건문을 넣어줄 수도 있음
+
+=> [keyword, counter]처럼 2개도 가능
+
+​           
+
+​             
+
+### Cleanup
+
+> 컴포넌트가 destroy될 때 실행될 함수
+
+
+
+``` js
+function Hello() {
+  useEffect(() => {
+    console.log("created :)");
+    return () => console.log("destroyed :(")
+  }, []);
+
+  return <h1>Hello</h1>;
+}
+```
+
+```js
+function Hello() {
+  function byFn() {
+    console.log("bye :(");
+  }
+  function huFn() {
+    console.log("created :)");
+    return byFn;
+  }
+  useEffect(huFn, []);
+
+  return <h1>Hello</h1>;
+}
+```
+
+둘 다 같은 방법 
 
 
 
