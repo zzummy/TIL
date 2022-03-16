@@ -1,20 +1,24 @@
+> NomadCoders - ReactJS로 영화 웹 서비스 만들기 中
+
+​      
+
 # CREATE REACT APP
 
 
 
 ReactJS를 사용하기 위해 더이상 <script> 태그로 import하지 않아도 됨
 
-   
+​         
 
 <https://nodejs.org/en> 에서 nodejs 설치 후, cmd에 `node -v` 확인
 
 그리고 cmd에 `npx` 명령어 입력되면 준비 완료
 
-  
+​        
 
 만들어줄 폴더명(react-for-beginners)로 생성 `npx create-react-app react-for-beginners` 
 
-  
+​        
 
 package.json을 열어보면 실행시킬 수 있는 script들을 볼 수 있음 
 
@@ -29,17 +33,17 @@ package.json을 열어보면 실행시킬 수 있는 script들을 볼 수 있음
 
 `npm run start` or `npm start` 하면 development server를 만들게 됨
 
- 
+​       
 
 ##### propTypes 설치
 
 `npm i prop-types`  후, `import PropTypes from "prop-types";` 하고 사용해주면 됨
 
-​    
+​          
 
 ----
 
-
+​      
 
 컴포넌트 당 1개의 .js 파일 가질 수 있어 모듈화 가능
 
@@ -55,7 +59,13 @@ package.json을 열어보면 실행시킬 수 있는 script들을 볼 수 있음
 
 
 
+----
 
+​      
+
+react app으로 생성했으므로 
+
+`const [value, setValue] = useState(0);` 처럼 `React.useState`로 쓰지 않아도 됨 ! 
 
 
 
