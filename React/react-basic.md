@@ -4,27 +4,29 @@
 
 ## 목차
 
-[1. React란 ?](#react란?)
+[1. React란 ?](#react란?)               
+	[JSX](#jsx)
 
 [2. state란 ?](#state)   
-             [React.useState()](#react.usestate)   
-             [modifier는 왜 쓰나?](#modifier는-왜-쓰나-?)       
+	[React.useState()](#react.usestate)   
+	[modifier는 왜 쓰나?](#modifier는-왜-쓰나-?)         
+	[function에서 class로 변환하기](#function에서-class로-변환하기)             
+	[Lifecycle(생명주기란)](#lifecycle)         
+	[setState()](#setstate)
 
 [3. unit conversion (단위 변환) 앱 만들기](#unit-conversion-단위-변환-앱-만들기)   
-             [Minutes to Hours 변환](#minutes-to-hours-변환)    
-             [Hours to Minutes 하는 flip function 만들기 ](#hours-to-minutes-하는-flip-function-만들기)   
-             [select를 사용한 단위 변환기](#select를-사용한-단위-변환기)    
+	[Minutes to Hours 변환](#minutes-to-hours-변환)    
+	[Hours to Minutes 하는 flip function 만들기 ](#hours-to-minutes-하는-flip-function-만들기)   
+	[select를 사용한 단위 변환기](#select를-사용한-단위-변환기)    
 
 [4. props란 ?](#props)    
-             [React.memo()](#react.memo)
+	[React.memo()](#react.memo)
 
 [5. Effects](#effects)            
-             [useEffect() ](#useeffect)          
-             [Cleanup](#cleanup)
+	[useEffect() ](#useeffect)          
+	[Cleanup](#cleanup)
 
-
-
-​          
+​	
 
 ## React란?
 
@@ -87,7 +89,9 @@ const btn = React.createElement("button",
 
 ​          
 
-createElement 대체 방법 -> **JSX** 
+### JSX
+
+createElement 대체 방법 
 
 ​          
 
@@ -173,6 +177,8 @@ const Button = (
 
 기본적으로 데이터가 저장되는 곳, 동적인 값
 
+웹 애플리케이션을 렌더(render)하는데 있어 영향을 미칠 수 있는 값
+
 ​          
 
 ### React.useState()
@@ -242,6 +248,205 @@ function App(){
 > setCounter((current) => current + 1) 는 값이 변경될 때마다 새로운 state로 current가 생성되기 때문에 더 안전함
 
 ​          
+
+​           
+
+### function에서 class로 변환하기
+
+1. React.Component를 확장하는 동일한 이름의 ES6 class 생성
+2. render() 메서드 추가
+3. 함수 내용을 render() 메서드 안으로 옮김
+4. render() 안에 있는 props를 this.props로 변경
+5. 남아있는 빈 함수 선언 삭제
+
+
+
+> 시계 예시 코드
+
+``` js
+function Clock(props) {
+  return (
+    <div>
+      <h1>Hello, world!</h1>
+      <h2>It is {props.date.toLocaleTimeString()}.</h2>
+    </div>
+  );
+}
+```
+
+- `date`를 props에서 state로 이동
+  - `this.props.state` -> `this.state.date`로 변경
+  - 초기 `this.state`를 지정하는 class constructor 추가
+  - <Clock /> 요소에서 `date` prop 삭제
+
+```js
+class Clock extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {date: new Date()};
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>Hello, world!</h1>
+        <h2>It is {this.state.date.toLocaleTimeString()}.</h2>
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(
+  <Clock />,
+  document.getElementById('root')
+);
+```
+
+​          
+
+​                   
+
+### Lifecycle
+
+> 생명주기 메서드를 클래스에 추가하기
+
+
+
+- **생명주기 메서드**
+
+  - 마운팅 : component가 처음 DOM에 렌더링 될 때
+
+  - 언마운팅 : component에 의해 생성된 DOM이 삭제될 때
+  - `componentDidMount()` : component 출력물이 DOM에 렌더링 된 후에 실행
+  - `componentWillUnmount()` : component가 DOM에서 삭제될 때 실행
+
+​              
+
+```js
+class Clock extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {date: new Date()};
+  }
+
+  componentDidMount() {
+    this.timerID = setInterval(
+      () => this.tick(),
+      1000
+    );
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerID);
+  }
+
+  tick() {
+    this.setState({
+      date: new Date()
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>Hello, world!</h1>
+        <h2>It is {this.state.date.toLocaleTimeString()}.</h2>
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(
+  <Clock />,
+  document.getElementById('root')
+);
+```
+
+> 동작 원리
+
+1. `<Clock />` 가 `ReactDOM.render()`로 전달되었을 때 `Clock` 컴포넌트의 constructor를 호출함         
+   => `this.state`를 초기화
+2. `<Clock />` 컴포넌트의 `render()` 메서드 호출함 (React는 화면에 표시될 내용을 알게 됨)          
+   => Clock의 렌더링 출력값을 일치시키기 위해 DOM 업데이트
+3. Clock 출력값이 DOM에 삽입되면, React는 `componentDidMount()` 호출             
+   => 매초 컴포넌트의 `tick()`메서드 호출하기 위한 타이머를 설정하도록 브라우저에 요청함
+4. 매초 브라우저가 `tick()`호출함. 그 안에서 Clock 컴포넌트는 `setState()`에 현재 시각을 포함하는 객체를 호출하면서 UI 업데이트 진행         
+   => `setState()`호출로 state가 변경됨을 인지하기 위해 `render()` 다시 호출             
+   => 이 때 `render()` 메서드 안의 `this.state.date`가 달라지고 렌더링 출력값은 업데이트된 시간을 포함       
+   => DOM 업데이트
+5. Clock 컴포넌트가 DOM으로부터 한 번이라도 삭제된 적이 있다면 타이머를 멈추기 위해 React는 `componentWillUnmount()` 생명주기 메서드 호출
+
+​             
+
+​               
+
+### setState()
+
+> state 올바르게 사용하기
+
+
+
+#### ***1. state는 직접 수정할 수 없음 -> setState()를 사용하자***
+
+- `this.state.comment = 'Hello';` 			불가능
+
+- `this.setState({comment : 'Hello'});` 가능
+
+- this.state를 지정할수 있는 곳은 `constructor`
+
+​         
+
+#### ***2. state 업데이트는 비동기적일 수 있음***
+
+- React는 여러 `setState()` 호출을 한꺼번에 처리할수 있음
+
+- `this.props`와 `this.state`가 비동기적으로 업데이트될 수 있기 때문에 다음 state를 계산할 때 해당 값에 의존해서는 안됨
+
+- ```js
+  // Wrong
+  this.setState({
+    counter: this.state.counter + this.props.increment,
+  });
+  ```
+
+- ```js
+  // Correct
+  // 이전 state를 첫 번째 인자로, 업데이트가 적용된 props를 두 번째 인자로 받음
+  this.setState((state, props) => ({
+    counter: state.counter + props.increment
+  }));
+  ```
+
+- ```js
+  // Correct
+  this.setState(function(state, props) {
+    return {
+      counter: state.counter + props.increment
+    };
+  });
+  ```
+
+​      
+
+#### ***3. state 업데이트는 병합됨***
+
+- `setState()`를 호출할 때 React는 제공한 객체를 현재 state로 병합함
+
+- 예를 들어, state는 다양한 독립적인 변수를 포함할 수 있음          
+
+  ```js
+   constructor(props) {
+      super(props);
+      this.state = {
+        posts: [],
+        comments: []
+      };
+    }
+  ```
+
+  ​               
+
+​                
 
 --------------
 
