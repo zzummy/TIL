@@ -39,6 +39,7 @@
 [(+) 함수 정리](#함수-정리)     
 
 - [fetch()](#fetch)
+- [async-await](#async-await)
 
 ​                
 
@@ -981,15 +982,20 @@ function Hello() {
 
     - Request 객체의 첫번째 인자는 호출한 Path, 두번째 인자는 Request에 대한 정보(method, header, body 등등) 들어감
 
-      - **method** 는 HTTP method와 동일한 스팩으로 들어가면 됨        
+      - **method** 는 HTTP method와 동일한 스팩으로 들어가면 됨 
+        
         GET/POST/HEAD/PUT/DELETE/OPTION/PATH 등등        
+        
         `GET(defualt)` : 어떤 정보 가져올 때        
+
         `POST` : 어떤 정보를 backend로 보낼 때        
+        
         `DELETE` : 어떤 정보를 삭제할 때        
-
+        
       - **headers** 는 Request와 Header를 지정해주는 곳        
+        
         *Object lireral*과 *Headers 객체의 인스턴스*를 넣을 수 있음        
-
+        
         ```js
         const request = new Request('/api/posts',{
         	method: "GET",
@@ -1005,13 +1011,15 @@ function Hello() {
         	})
         })
         ```
-
+        
       - **body** 는 HTTP Request에 실을 데이터인데 여러가지 타입을 넣을 수 있음        
-        즉, *전달하고자 하는 응답 내용*
-        **<u>객체 타입</u>**으로 작성해야 함
-
+        
+        즉, *전달하고자 하는 응답 내용**
+        
+        ***객체 타입**으로 작성해야 함
+  
   - **Response** : fetch를 호출하면 가져올 수 있는 객체
-
+  
     - status : HTTP response code를 담고 있음 (성공 : 200)
     - statusText : 기본값 ok. 상황에 따라 다른 message
     - ok : status의 200-299의 값을 추상화한 boolean (200-299 : true)
@@ -1031,7 +1039,44 @@ function Hello() {
 
 
 
-​             
+```js
+useEffect(() => {
+    fetch("https://api.coinpaprika.com/v1/tickers")
+      .then((response) => response.json())
+      .then((json) => {
+        setCoins(json);
+        setLoading(false);
+      });
+  }, [])
+```
 
-​            
+[fetch 사용 코드](https://github.com/zzummy/react-study/commit/222c56d9c15188720423d1da5cc3afea6b7083ba#diff-a57feca475bb6559f612489180521851c3b213aaa4a38961899f184137d8d7f0L25 )
+
+​                 
+
+​               
+
+### async-await
+
+> Promise의 불편한 점 개선 (참고 : https://www.daleseo.com/js-async-async-await/)
+> then보다 보편적으로 많이 사용됨
+>
+> 비동기 코드를 마치 동기 코드처럼 보이게 작성
+
+​           
+
+``` js
+const getMovies = async () => {
+    const response = await (fetch(
+      `https://yts.mx/api/v2/list_movies.json?minimum_rating=9&sort_by=year`
+    ));
+    const json = await response.json();
+    setMovies(json.data.movies);
+    setLoading(false);
+  }
+```
+
+​              
+
+
 
