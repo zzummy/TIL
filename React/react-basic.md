@@ -1,4 +1,4 @@
-> NomadCoders - ReactJS로 영화 웹 서비스 만들기 
+> NomadCoders - ReactJS로 영화 웹 서비스 만들기
 
 
 
@@ -26,7 +26,25 @@
 	[useEffect() ](#useeffect)          
 	[Cleanup](#cleanup)
 
-​	
+​            
+
+​         
+
+--------
+
+​                
+
+​              
+
+[(+) 함수 정리](#함수-정리)     
+
+- [fetch()](#fetch)
+
+​                
+
+​              
+
+​               
 
 ## React란?
 
@@ -910,4 +928,110 @@ function Hello() {
 둘 다 같은 방법 
 
 
+
+​             
+
+​             
+
+​             
+
+​             
+
+​             
+
+---------------
+
+​             
+
+## 함수 정리
+
+​             
+
+### fetch()
+
+> Request나 Response와 같은 HTTP 파이프라인을 구성하는 요소를 조작할 수 있게 해주는 API
+>
+> 비동기 네트워크 통신을 보다 더 쉽게 기술할 수 있음
+>
+> JavaScript 내장 Web API (Axios는 Promise 기반 HTTP 클라이언트)
+
+​              
+
+- 기본 문법
+
+  ```js
+  fetch('api 주소')
+  	.then(res => res.json())
+  	.then(res => {
+  		//data를 응답 받은 후의 로직
+  	});
+  ```
+
+  ​                
+
+- 3개의 interface
+
+  - **Headers** : HTTP header와 대응되는 객체
+
+  - **Request** : HTTP 요청을 통해 자원을 가져오는 인터페이스 
+
+    - URL, Header, Body가 필요
+
+    - Request에 대한 mode 제한과 certidicate 관련 설정도 추가 가능
+
+    - Request 객체의 첫번째 인자는 호출한 Path, 두번째 인자는 Request에 대한 정보(method, header, body 등등) 들어감
+
+      - **method** 는 HTTP method와 동일한 스팩으로 들어가면 됨        
+        GET/POST/HEAD/PUT/DELETE/OPTION/PATH 등등        
+        `GET(defualt)` : 어떤 정보 가져올 때        
+        `POST` : 어떤 정보를 backend로 보낼 때        
+        `DELETE` : 어떤 정보를 삭제할 때        
+
+      - **headers** 는 Request와 Header를 지정해주는 곳        
+        *Object lireral*과 *Headers 객체의 인스턴스*를 넣을 수 있음        
+
+        ```js
+        const request = new Request('/api/posts',{
+        	method: "GET",
+        	headers:{
+        		'content-type' : 'application/json',
+        	}
+        });
+        
+        const request2 = new Request('/api/posts'),{
+        	method: 'GET',
+        	header: new Headers({
+        		'content-type' : 'application/json',
+        	})
+        })
+        ```
+
+      - **body** 는 HTTP Request에 실을 데이터인데 여러가지 타입을 넣을 수 있음        
+        즉, *전달하고자 하는 응답 내용*
+        **<u>객체 타입</u>**으로 작성해야 함
+
+  - **Response** : fetch를 호출하면 가져올 수 있는 객체
+
+    - status : HTTP response code를 담고 있음 (성공 : 200)
+    - statusText : 기본값 ok. 상황에 따라 다른 message
+    - ok : status의 200-299의 값을 추상화한 boolean (200-299 : true)
+    - headers : Response headers이기 때문에 headers의 guard 속성은 response
+    - type : response객체의 type
+
+​                
+
+- **res.json()의 의미**
+
+  첫번째 then함수에 전달된 인자 res는 HTTP 통신 요청과 응답에서 응답의 정보를 담고있는 객체    
+  하지만 콘솔 창에서 확인해보면 실제 data는 찍히지 않음                 
+
+  응답으로 받는 JSON 데이터를 사용하기 위해서 Response Object의 json함수를 호출하고 return 해야함    
+
+  -> return된 값이 두번째 then 함수의 인자로 옴 (Object 형태로)
+
+
+
+​             
+
+​            
 
