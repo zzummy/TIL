@@ -26,14 +26,14 @@
 
 :two: **PRACTICE PROJECT**
 
- 	1. [Patterns](#patterns)
- 	2. [Fetching Data](#fetching-data)
- 	3. [Redirect and Rewrite](#redirect-and-rewrite)
- 	4. [Server Side Rendering (SSR)](#server-side-rendering-(SSR))
- 	5. [Dynamic Routes](#dynamic-routes)
- 	6. [Movie Detail](#movie-detail)
- 	7. [Catch All](#catch-all)
- 	8. [404 Pages](#404-pages)
+1. [Patterns](#patterns)
+2. [Fetching Data](#fetching-data)
+3. [Redirect and Rewrite](#redirect-and-rewrite)
+4. [Server Side Rendering (SSR)](#server-side-rendering-(SSR))
+5. [Dynamic Routes](#dynamic-routes)
+6. [Movie Detail](#movie-detail)
+7. [Catch All](#catch-all)
+8. [404 Pages](#404-pages)
 
 ​              
 
