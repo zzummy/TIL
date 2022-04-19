@@ -26,7 +26,18 @@
 
 :two: **PRACTICE PROJECT**
 
-​	1. [Patterns](#patterns)
+ 	1. [Patterns](#patterns)
+ 	2. [Fetching Data](#fetching-data)
+ 	3. [Redirect and Rewrite](#redirect-and-rewrite)
+ 	4. [Server Side Rendering (SSR)](#server-side-rendering-(SSR))
+ 	5. [Dynamic Routes](#dynamic-routes)
+ 	6. [Movie Detail](#movie-detail)
+ 	7. [Catch All](#catch-all)
+ 	8. [404 Pages](#404-pages)
+
+​              
+
+​              
 
 ​              
 
@@ -60,8 +71,6 @@ Inversion of Control (통제의 역전)
 library에서 메서드를 호출하면 사용자가 제어할 수 있지만, framework에서는 제어가 역전되어 framework에서 사용자를 호출함
 
 ​                
-
------
 
 ​              
 
@@ -99,9 +108,7 @@ jsx를 쓰고있다면 React.js를 import할 필요 없음
 
 ​                
 
------
-
-​              
+​             
 
 ## Static Pre Rendering (사전 렌더링)
 
@@ -120,8 +127,6 @@ next.js의 가장 좋은 기능 중 하나는 App에 있는 페이지들이 **�
 react에서 server side rendering 혹은 SSG(static site generation)을 실행한 HTML 결과물을 받아온 뒤, 브라우저에서 이것을 다시 react tree에 맞게 파싱하는 것
 
 ​              
-
----------
 
 ​              
 
@@ -177,11 +182,7 @@ const router = useRouter();
   );
 ```
 
-​           
-
-------
-
-​            
+​                      
 
 ## CSS Modules
 
@@ -237,8 +238,6 @@ css module을 사용해서 스타일을 지정하면 class 명이 무작위 이�
 
 ​              
 
--------------
-
 ​             
 
 ## Styled JSX
@@ -267,8 +266,6 @@ styled JSX 또한 css module 처럼 class명이 무작위로 생성됨 -> css �
 scoped가 적용되는 것
 
 ​           
-
-------
 
 ​           
 
@@ -310,7 +307,9 @@ export default function App({ Component, pageProps }) {
 }
 ```
 
-​                      
+​                
+
+​                                   
 
 ------------
 
@@ -373,8 +372,6 @@ export default function Seo({ title }) {
 
 ​             
 
--------------------------
-
 ​              
 
 ## Fetching Data
@@ -383,9 +380,7 @@ export default function Seo({ title }) {
 
 ​             
 
-------------
-
-​           
+​          
 
 ## Redirect and Rewrite
 
@@ -457,11 +452,196 @@ async rewrites() {
 
 => localhost:3000/api/movies 로 이동하면 뒤에 붙은 API_KEY는 가려져(mask)있음
 
+​               
+
+​           
+
+## Server Side Rendering (SSR)
+
+​           
+
+### getServerSideProps
+
+서버 측 랜더링 함수
+
+빌드와 상관없이, 매 요청마다 데이터를 서버로부터 가져옴
+
+client 쪽이 아닌 server쪽에서만 작동함
+
+`export async function getServerSideProps() {}`  를 사용하면 Next.js는 getServerSideProps에서 반환된 데이터를 사용하여 각 request에서 이 페이지를 pre-render함
+
+=> rewrites를 쓰지않고도 API key를 숨길 수 있음 (서버에서만 작동하니까)
 
 
 
+#### getServerSideProps를 사용하여 request시 data fetch하기
 
+```js
+export default function Home({ results }) {
+    ...
+}
 
+export async function getServerSideProps() {
+  const { results } = await (
+    await fetch(`http://localhost:3000/api/movies`)
+  ).json();
+  return {
+    props: {
+      results,
+    },
+  };
+}
+```
 
+- getServerSideProps 함수는 매 request마다 실행됨
+- props를 통해 page에 data 전달함
 
+​             
 
+## Dynamic Routes
+
+/movies 라는 URL을 만들고 싶으면, `./pages/movies.js`로 만들면 됨 (페이지가 하나일 경우)
+
+하지만 이미 /movies/all이 있다면 pages 폴더 안에 movies 폴더를 생성해서 index.js 와 all.js를 만들어주면 됨
+
+`./pages/movies/index.js` `./pages/movies/all.js`
+
+​         
+
+### URL에 변수 넣는 방법
+
+Next.js에서는 page에 **대괄호([param])**를 추가하여 Dynamic Route를 생성할 수 있음
+
+​           
+
+#### **movie 상세 페이지** 
+
+`./pages/movies/[id].jd` 를 만들어주면 사용자가 /movies/1221212와 같은 URL로 접속하면 나올 페이지를 보여줌
+
+​           
+
+#### [Catch all routes](https://nextjs.org/docs/routing/dynamic-routes#catch-all-routes)
+
+대괄호 안에 세 개의 점(...)을 추가해서 모든 경로를 포착하도록 Dynamic Routes를 확장할 수 있음
+
+`pages/movies/[...id].js`는 /movies/1과 일치하지만 
+
+/movies/1/2, /movies/1/ab/cd 등과도 일치함
+
+일치하는 매개변수는 page에 쿼리 매개변수로 전송되며 항상 배열이므로 /movies/a 경로에는 {"id" : ["a"]}가 있음을 알 수 있음
+
+​              
+
+## Movie Detail
+
+영화 포스터를 클릭해서 상세 페이지로 넘어가고자 할 때, <Link>태그를 이용해서 <a> 태그안에 감싸면 될까 ?
+
+<a> 태그는 텍스트를 감싸야하며 <div> 태그를 감싸는 건 맞지 않음  (HTML5부터는 문제 없음)
+
+​         
+
+따라서 <div> 태그에 onClick 이벤트를 주고 id를 받아와 `router.push(`/movies/${id}`)` 를 해주면 됨
+
+```js
+const router = useRouter();
+  const onClick = (id) => {
+    router.push(`/movies/${id}`);
+  };
+```
+
+그리고 영화 상세 정보를 가져오기 위해 /movie/:id에 대한 rewrite를 해주면 됨
+
+​           
+
+router.push()를 할 때, URL을 string 혹은 객체로 보내줄 수 있음
+
+**객체로 router.push()**
+
+```js
+router.push({
+      pathname: `/movies/${id}`,
+      query: {
+        title: "potato",
+      },
+});
+```
+
+=> URL에 불필요한 ?title=potato가 붙는데, 불필요한 부분이니까 URL에 보이지않도록 숨겨보자
+
+```js
+router.push(
+      {
+        pathname: `/movies/${id}`,
+        query: {
+          title: "potato",
+        },
+      },
+      `/movies/${id}`
+);
+```
+
+=> title에 대한 내용은 mask된 것을 볼 수 있음
+
+=> router의 query에 id와 함께 title이 추가됨 (포스터 클릭할 때마다 영화제목도 넘겨줄 수 있음)
+
+`[id].js` 에서 title을 다룰 수 있게된다
+
+```js
+import { useRouter } from "next/router";
+
+export default function PaymentDetailsBase() {
+  const router = useRouter();
+  console.log(router);
+  return (
+    <div>
+      <h4>{router.query.title || "Loading..."}</h4>
+    </div>
+  );
+}
+```
+
+​           
+
+## Catch All
+
+**catch-all URL**은 뭐든 캐치해내는 URL
+
+사용자가 홈페이지를 통해 상세 페이지를 들어오지 않더라도 영화 제목을 URL에서 가져올거기 때문에 상세 페이지에서 영화 제목을 볼 수 있음
+
+​        
+
+### Catch All 방법
+
+기존의 `./pages/movies/[id].js` 파일을 `[...id].js`로 바꿔주면 됨
+
+앞에서 [필기한 내용](#catch-all-routes)에 설명 있음
+
+이렇게 사용하면 router의 query에는 더이상 string이 아닌 **{ id : ['spider-man', '634649'] } 배열형태** 로 들어오게 됨
+
+​             
+
+`[...params].js`로 바꿔준 후, 시크릿창에서 홈페이지를 걸치지 않고 상세 페이지로 들어왔을 때 `router.query.params`가 정의되지 않아 에러가 발생함
+
+**SSR 방식이기 때문에 발생하는 에러**
+
+이유는 서버 쪽에서 미리 렌더링이 되기 때문에 아직 js들이 다운로드가 되지않아 useRouter()로 params에 대한 정보를 가져오지 못하기 때문
+
+따라서 초기에는 빈 배열로 세팅해줘서 오류가 발생하지 않도록 막아주고, js가 내려가 다시 렌더링하게 되면 후에 `router.query.params`의 값을 읽어올 수 있게 됨
+
+`[...params].js` 코드
+
+```js
+const [title, id] = router.query.params || [];
+```
+
+​            
+
+## 404 Pages
+
+404 error page를 custom하고 싶다면 pages 폴더에 404.js를 생성하면 됨       
+
+​          
+
+​            
+
+끝 ! 새롭고 재밌당 😂
